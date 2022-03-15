@@ -1197,6 +1197,31 @@ public class XMLTest {
         assertEquals("swe262_contact", names[0]);
     }
 
+
+    @Test
+    public void testComplexPrefix(){
+        String xmlStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
+                "<contact>\n"+
+                "  <nick>Crista </nick>\n"+
+                "  <name>Crista Lopes</name>\n" +
+                "  <address>\n" +
+                "    <street>Ave of Nowhere</street>\n" +
+                "    <zipcode>92614</zipcode>\n" +
+                "  </address>\n" +
+                "</contact>";
+
+
+        String prefix = "swe262_";
+        Function<String, String> transformer = (str) -> {
+            str = prefix + str;
+            return str;
+        };
+
+        JSONObject jsonObject = XML.toJSONObject(new StringReader(xmlStr), transformer);
+        String[] names = JSONObject.getNames(jsonObject);
+        assertEquals("swe262_contact", names[0]);
+    }
+
     /**
      *  Milestone 3
      *  Unit test - handleNullReaderInput():
