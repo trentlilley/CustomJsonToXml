@@ -3463,5 +3463,82 @@ public class JSONObjectTest {
         .collect(toList());
     assertEquals(expectedNestedEntries, actualNestedEntries);
   }
+
+    /**
+     * Milestone 4
+     */
+    @Test
+    public void jsonStreamsTestArrayElementCounts() {
+        JSONObject obj =  XML.toJSONObject("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
+                "<contact>\n"+
+                "  <nick>Crista </nick>\n"+
+                "  <name>Crista Lopes</name>\n" +
+                "  <address>\n" +
+                "    <street>Ave of Nowhere</street>\n" +
+                "    <zipcode>92614</zipcode>\n" +
+                "  </address>\n" +
+                "</contact>");
+//        obj.toStream().forEach(node -> System.out.println("JSONObject Node: " + node.toString()));
+        long nodesCount = obj.toStream().count();
+        assertEquals(6, nodesCount);
+    }
+
+    /**
+     * Milestone 4
+     */
+    @Test
+    public void jsonStreamsTestArrayOutputSpecific() {
+        JSONObject obj = XML.toJSONObject(
+                "<Books>" +
+                        "<book>" +
+                        "<title>AAA</title>" +
+                        "<author>ASmith</author>" +
+                        "</book>" +
+                        "<book>" +
+                        "<title>BBB</title>" +
+                        "<author>BSmith</author>" +
+                        "</book>" +
+                        "</Books>"
+        );
+
+        List<String> titles = obj.toStream()
+                .filter(node -> node.getKey().equals("title"))
+                .map(node -> (String) node.getValue())
+                .collect(Collectors.toList());
+
+        String first = titles.get(0);
+        String second = titles.get(1);
+        assertEquals("AAA", first);
+        assertEquals("BBB", second);
+    }
+
+    /**
+     * Milestone 4
+     */
+    @Test
+    public void jsonStreamsTestModifyValue() {
+        JSONObject obj = XML.toJSONObject(
+                "<Books>" +
+                        "<book>" +
+                        "<title>AAA</title>" +
+                        "<author>ASmith</author>" +
+                        "</book>" +
+                        "<book>" +
+                        "<title>BBB</title>" +
+                        "<author>BSmith</author>" +
+                        "</book>" +
+                        "</Books>"
+        );
+
+        // Filter nodes with title key and modify the value
+        obj.toStream()
+                .filter(node -> node.getKey().equals("title"))
+                .forEach(node -> node.setValue(node.getValue()+"_NEW"));
+
+        String expected = "{\"Books\":{\"book\":" +
+                "[{\"author\":\"ASmith\",\"title\":\"AAA_NEW\"},{\"author\":\"BSmith\",\"title\":\"BBB_NEW\"}]" +
+                "}}";
+        assertEquals(expected, obj.toString());
+    }
 }
 

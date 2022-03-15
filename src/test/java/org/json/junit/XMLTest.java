@@ -1197,7 +1197,13 @@ public class XMLTest {
         assertEquals("swe262_contact", names[0]);
     }
 
-
+    /**
+     *  Milestone 3
+     *  Unit test - testComplexPrefix():
+     *  Checks if toJSONObject properly modifies the string with given prefix.
+     *
+     *  @authors Trent Lilley, Joseph Lee
+     */
     @Test
     public void testComplexPrefix(){
         String xmlStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
@@ -1222,6 +1228,42 @@ public class XMLTest {
         assertEquals("swe262_contact", names[0]);
     }
 
+    /**
+     *  Milestone 3
+     *  Unit test - testSimpleAddPrefix():
+     *  Checks if toJSONObject properly modifies the string with given prefix.
+     *
+     *  @authors Trent Lilley, Joseph Lee
+     */
+    @Test
+    public void testToJsonObjectReverseKeyString(){
+        String xmlStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
+                "<contact>\n"+
+                "  <nick>Crista </nick>\n"+
+                "  <name>Crista Lopes</name>\n" +
+                "  <address>\n" +
+                "    <street>Ave of Nowhere</street>\n" +
+                "    <zipcode>92614</zipcode>\n" +
+                "  </address>\n" +
+                "</contact>";
+
+        Function<String, String> transformer = (str) -> {
+            String nstr = "";
+            char ch;
+
+            for (int i=0; i<str.length(); i++)
+            {
+                ch= str.charAt(i); //extracts each character
+                nstr= ch + nstr; //adds each character in front of the existing string
+            }
+            return nstr;
+        };
+
+        JSONObject jsonObject = XML.toJSONObject(new StringReader(xmlStr), transformer);
+        System.out.println(jsonObject.toString(4));
+        String[] names = JSONObject.getNames(jsonObject);
+        assertEquals("tcatnoc", names[0]);
+    }
     /**
      *  Milestone 3
      *  Unit test - handleNullReaderInput():

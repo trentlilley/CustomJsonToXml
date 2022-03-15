@@ -1313,7 +1313,7 @@ public class XML {
         XMLXsiTypeConverter<?> xmlXsiTypeConverter;
 
         token = x.nextToken();
-        System.out.println("TOKEN: " + token);
+//        System.out.println("TOKEN: " + token);
 
         /* [1]case '!': we have a comment */
         if (token == BANG) {
@@ -1358,7 +1358,7 @@ public class XML {
 
         /* [1]case '?': skip all xml headers */
         else if (token == QUEST) { // CLOSE
-            System.out.println("  pass");
+//            System.out.println("  pass");
             x.skipPast("?>");
             return false;
         } // END '?' CASE
@@ -1366,7 +1366,7 @@ public class XML {
         /* [1]case '/': check for errors in closing tag, go to next recursion */
         else if (token == SLASH) {
             token = x.nextToken();
-            System.out.println("  passed"); // DEBUG
+//            System.out.println("  passed"); // DEBUG
             if (name == null) {
                 throw x.syntaxError("Mismatched close tag " + token);
             }
@@ -1396,14 +1396,14 @@ public class XML {
             for (;;) {
                 if (token == null) {
                     token = x.nextToken();
-                    System.out.println("  next: |" + tagName + "| " + token);
+//                    System.out.println("  next: |" + tagName + "| " + token);
                 }
 
                 /* [2]Case not '/' or '>': ??? */
                 if (token instanceof String) {
                     string = (String) token;
                     token = x.nextToken();
-                    System.out.println("  next: |" + tagName + "| |" + string + "| " + token);
+//                    System.out.println("  next: |" + tagName + "| |" + string + "| " + token);
                     if (token == EQ) {
                         token = x.nextToken();
                         if (!(token instanceof String)) {
@@ -1468,7 +1468,7 @@ public class XML {
                 else if (token == GT) {
                     for (;;) {
                         token = x.nextContent();
-                        System.out.println("  next: |" + tagName + "| |>| " + token) ;
+//                        System.out.println("  next: |" + tagName + "| |>| " + token) ;
 
                         if (token == null) {
                             if (tagName != null) {
@@ -1486,7 +1486,7 @@ public class XML {
                                         stringToValue(string, xmlXsiTypeConverter));
                                 }
                                 else {
-                                    System.out.println("  accumulate: " + config.getcDataTagName() + ", " + string);
+//                                    System.out.println("  accumulate: " + config.getcDataTagName() + ", " + string);
 
                                     // KEY TRANSFORM
                                     String key = null;
@@ -1503,9 +1503,9 @@ public class XML {
                         /* hits when above is '<' */
                         else if (token == LT) {
                             // Nested element
-                            System.out.println("  ---recurse");
+//                            System.out.println("  ---recurse");
                             if (replaceKeys(x, jsonObject, keyTransformer, tagName, config)) {
-                                System.out.println("  ---recursed true");
+//                                System.out.println("  ---recursed true");
                                 if (config.getForceList().contains(tagName)) {
                                     // Force the value to be an array
                                     if (jsonObject.length() == 0) {
@@ -1521,7 +1521,7 @@ public class XML {
                                     } else if (jsonObject.length() == 1 && jsonObject.opt(config.getcDataTagName()) != null) { /*  */
                                         context.accumulate(tagName, jsonObject.opt(config.getcDataTagName()));
                                     } else {
-                                        System.out.println("  TEST: " + tagName + ", " + jsonObject);
+//                                        System.out.println("  TEST: " + tagName + ", " + jsonObject);
 
                                         // KEY TRANSFORM
                                         String key = null;
@@ -1542,7 +1542,7 @@ public class XML {
                 else {
                     throw x.syntaxError("Misshaped tag");
                 } //END [2]
-                System.out.println("  exit method");
+//                System.out.println("  exit method");
             }
         } //END [1]
     } // END METHOD
