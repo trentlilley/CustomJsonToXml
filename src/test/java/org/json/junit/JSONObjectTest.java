@@ -3354,7 +3354,67 @@ public class JSONObjectTest {
         jsonObject.getInt("key1"); //Should throws org.json.JSONException: JSONObject["asd"] not found
     }
 
-  /**
+
+    /**
+     * Milestone 4 - jsonStreamSpliteratorGetSpecificKey()
+     *
+     * Test streaming from spliterator class in JSONObject. ToStream2()
+     */
+    @Test
+    public void jsonStreamSpliteratorGetSpecificKey() {
+        JSONObject obj = XML.toJSONObject(
+                "<Books>" +
+                        "<book>" +
+                        "<title>AAA</title>" +
+                        "<author>ASmith</author>" +
+                        "</book>" +
+                        "<book>" +
+                        "<title>BBB</title>" +
+                        "<author>BSmith</author>" +
+                        "</book>" +
+                        "</Books>"
+        );
+
+        List<String> titles = obj.toStream2()
+                .filter(node -> node.has("title"))
+                .map(node -> node.get("title").toString())
+                .collect(Collectors.toList());
+
+        String first = titles.get(0);
+        String second = titles.get(1);
+        assertEquals("AAA", first);
+        assertEquals("BBB", second);
+    }
+
+    /**
+     * Milestone 4 - jsonStreamSpliteratorModifySpecificKey()
+     *
+     * Test streaming from spliterator class in JSONObject. ToStream2()
+     */
+    @Test
+    public void jsonStreamSpliteratorModifySpecificKey() {
+        JSONObject obj = XML.toJSONObject(
+                "<Books>" +
+                        "<book>" +
+                        "<title>AAA</title>" +
+                        "<author>ASmith</author>" +
+                        "</book>" +
+                        "<book>" +
+                        "<title>BBB</title>" +
+                        "<author>BSmith</author>" +
+                        "</book>" +
+                        "</Books>"
+        );
+
+        obj.toStream2()
+                .filter(node -> node.has("title"))
+                .forEach(node -> node.put("title", "newrelease_" + node.get("title")));
+
+        String expected = "{\"Books\":{\"book\":[{\"author\":\"ASmith\",\"title\":\"newrelease_AAA\"},{\"author\":\"BSmith\",\"title\":\"newrelease_BBB\"}]}}";
+        assertEquals(expected, obj.toString());
+    }
+
+    /**
    * Milestone 4
    * Trent Lilley / Joseph Lee
    *
@@ -3408,64 +3468,64 @@ public class JSONObjectTest {
         });
   }
 
-  /**
-   * Milestone 4
-   * Trent Lilley / Joseph Lee
-   *
-   * Tests if the toStream function properly handles
-   * array elements that are not key-value pairs
-   * nodes with array values should be further expanded into
-   * key value pairs where the key is the array index and the
-   * value is the array element
-   */
-  @Test
-  public void jsonStreamsTestArrayElements() {
-    String jsonString =
-        "{" +
-            "\"key1\":" +
-            "[1,2," +
-            "{\"key3\":true}" +
-            "]," +
-            "\"key2\":" +
-            "{\"key1\":\"val1\",\"key2\":" +
-            "{\"key2\":null}," +
-            "\"key3\":42" +
-            "}," +
-            "\"key4\":" +
-            "[" +
-            "[\"value1\",2.1]" +
-            "," +
-            "[null]" +
-            "]" +
-            "}";
+      /**
+       * Milestone 4
+       * Trent Lilley / Joseph Lee
+       *
+       * Tests if the toStream function properly handles
+       * array elements that are not key-value pairs
+       * nodes with array values should be further expanded into
+       * key value pairs where the key is the array index and the
+       * value is the array element
+       */
+      @Test
+      public void jsonStreamsTestArrayElements() {
+        String jsonString =
+            "{" +
+                "\"key1\":" +
+                "[1,2," +
+                "{\"key3\":true}" +
+                "]," +
+                "\"key2\":" +
+                "{\"key1\":\"val1\",\"key2\":" +
+                "{\"key2\":null}," +
+                "\"key3\":42" +
+                "}," +
+                "\"key4\":" +
+                "[" +
+                "[\"value1\",2.1]" +
+                "," +
+                "[null]" +
+                "]" +
+                "}";
 
-    JSONObject json = new JSONObject(jsonString);
+        JSONObject json = new JSONObject(jsonString);
 
-    List<String> expectedEntries = new ArrayList<>(
-        Arrays.asList("key1=[1,2,{\"key3\":true}]", "0=1", "1=2", "2={\"key3\":true}")
-    );
+        List<String> expectedEntries = new ArrayList<>(
+            Arrays.asList("key1=[1,2,{\"key3\":true}]", "0=1", "1=2", "2={\"key3\":true}")
+        );
 
-    List<String> expectedNestedEntries = new ArrayList<>(
-        Arrays.asList("key4=[[\"value1\",2.1],[null]]", "0=[\"value1\",2.1]", "0=value1", "1=2.1", "1=[null]", "0=null")
-    );
+        List<String> expectedNestedEntries = new ArrayList<>(
+            Arrays.asList("key4=[[\"value1\",2.1],[null]]", "0=[\"value1\",2.1]", "0=value1", "1=2.1", "1=[null]", "0=null")
+        );
 
-    // check the first four entries to see if array value nodes were expanded as specified
-    List<String> actualEntires = json.toStream()
-        .map(Object::toString)
-        .limit(4)
-        .collect(toList());
-    assertEquals(expectedEntries, actualEntires);
+        // check the first four entries to see if array value nodes were expanded as specified
+        List<String> actualEntires = json.toStream()
+            .map(Object::toString)
+            .limit(4)
+            .collect(toList());
+        assertEquals(expectedEntries, actualEntires);
 
-    // check if nested arrays are handled
-    List<String> actualNestedEntries = json.toStream()
-        .map(Object::toString)
-        .skip(10)
-        .collect(toList());
-    assertEquals(expectedNestedEntries, actualNestedEntries);
-  }
+        // check if nested arrays are handled
+        List<String> actualNestedEntries = json.toStream()
+            .map(Object::toString)
+            .skip(10)
+            .collect(toList());
+        assertEquals(expectedNestedEntries, actualNestedEntries);
+      }
 
     /**
-     * Milestone 4
+     * Milestone 4*
      */
     @Test
     public void jsonStreamsTestArrayElementCounts() {
@@ -3484,7 +3544,7 @@ public class JSONObjectTest {
     }
 
     /**
-     * Milestone 4
+     * Milestone 4*
      */
     @Test
     public void jsonStreamsTestArrayOutputSpecific() {
@@ -3513,7 +3573,7 @@ public class JSONObjectTest {
     }
 
     /**
-     * Milestone 4
+     * Milestone 4*
      */
     @Test
     public void jsonStreamsTestModifyValue() {

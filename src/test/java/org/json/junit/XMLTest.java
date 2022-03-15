@@ -1198,7 +1198,7 @@ public class XMLTest {
     }
 
     /**
-     *  Milestone 3
+     *  Milestone 3*
      *  Unit test - testComplexPrefix():
      *  Checks if toJSONObject properly modifies the string with given prefix.
      *
@@ -1229,7 +1229,7 @@ public class XMLTest {
     }
 
     /**
-     *  Milestone 3
+     *  Milestone 3*
      *  Unit test - testSimpleAddPrefix():
      *  Checks if toJSONObject properly modifies the string with given prefix.
      *
@@ -1260,7 +1260,7 @@ public class XMLTest {
         };
 
         JSONObject jsonObject = XML.toJSONObject(new StringReader(xmlStr), transformer);
-        System.out.println(jsonObject.toString(4));
+//        System.out.println(jsonObject.toString(4));
         String[] names = JSONObject.getNames(jsonObject);
         assertEquals("tcatnoc", names[0]);
     }
@@ -1340,7 +1340,7 @@ public class XMLTest {
     }
 
     /**
-     *  Milestone 5
+     *  Milestone 5*
      *  Unit test - testAsyncToJsonSimpleLowerCase():
      *  Checks if toJSONObjectAsync can perform simple operations
      *  asynchronously for the resulting Future object
@@ -1376,7 +1376,7 @@ public class XMLTest {
     }
 
     /**
-     *  Milestone 5
+     *  Milestone 5*
      *  Unit test - testToJsonFutureReplaceStringValue():
      *  Checks if toJSONObjectAsync can perform simple
      *  replacement operations asynchronously for the resulting Future object
@@ -1386,9 +1386,9 @@ public class XMLTest {
     @Test
     public void testToJsonAsyncFutureReplaceStringValue(){
         String xmlStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
-            "<contact>\n"+
-            "  <name>John Doe</name>\n" +
-            "</contact>";
+                "<contact>\n"+
+                "  <name>John Doe</name>\n" +
+                "</contact>";
 
         Function<JSONObject, JSONObject> appendValue = (obj) -> {
             String data = obj.toString();

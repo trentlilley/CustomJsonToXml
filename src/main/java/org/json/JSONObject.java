@@ -38,8 +38,10 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * A JSONObject is an unordered collection of name/value pairs. Its external
@@ -2717,12 +2719,106 @@ public class JSONObject {
 
 
     //................. Milestone 4
+
     /**
+     * Milestone 4 - Spliterator
+     *
+     *  Streaming of JSONObject class.
+     *  Utilizes Spliterator class, which traverses down all of the nodes within the tryAdvance method.
+     *  Streaming is performed in series, thus trySplit is not implemented.
+     *
+     */
+    public Stream<JSONObject> toStream2(){
+        return StreamSupport.stream(this.spliterator(), false);
+    }
+
+    public Spliterator<JSONObject> spliterator(){
+        return new TreeSpliterator(this);
+    }
+
+    static class TreeSpliterator implements Spliterator<JSONObject> {
+
+        private JSONObject root;
+        private JSONObject tree;
+        private String nextKey;
+
+        TreeSpliterator(JSONObject t) {
+            this.root = this.tree = t;
+        }
+
+        @Override
+        public boolean tryAdvance(Consumer<? super JSONObject> action) {
+
+            /** tryAdvance:
+             *      This is the main method used for stepping through a sequence.
+             *      The method takes a Consumer that’s used to consume elements of the Spliterator
+             *      one by one sequentially and returns false if there’re no elements to be traversed.
+             */
+
+            // current is the node that gets streamed.
+            JSONObject current = tree;
+            action.accept(current);
+            Iterator<String> iter = current.keys();
+
+            // Recursive traversal down the tree nodes.
+            while (iter.hasNext()) {
+                nextKey = (String) iter.next();
+                JSONPointer pointer = new JSONPointer("/" + nextKey);
+
+                // If next node is JSON Array
+                if (current.get(nextKey) instanceof JSONArray) {
+                    JSONArray jsonArray = current.getJSONArray(nextKey);
+
+
+                    if (jsonArray.length() > 1) {
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            tree = jsonArray.getJSONObject(i);
+                            tryAdvance(action);
+                        }
+                    }
+                }
+                // Another JSONObject, advance
+                else if (current.get(nextKey) instanceof JSONObject) {
+                    tree = (JSONObject) current.query(pointer);
+                    tryAdvance(action);
+                    return false;
+                }
+
+                // Leaf node
+                else {
+                    return false;
+                }
+            }
+            if (tree == root) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        @Override
+        public Spliterator<JSONObject> trySplit() {
+            return null;
+        }
+
+        @Override
+        public long estimateSize() {
+            return 0;
+        }
+
+        @Override
+        public int characteristics() {
+            return Spliterator.DISTINCT | Spliterator.IMMUTABLE | Spliterator.NONNULL;
+        }
+    }
+
+    /**
+     * Milestone 4 - Stream Builder
+     *
      * Used to construct a stream of key value pairs from the
      * map containing this JSONObject's properties
      */
     private Stream.Builder<Entry<String, Object>> builder;
-
 
     /**
      * Constructs a stream of key value pairs from the
