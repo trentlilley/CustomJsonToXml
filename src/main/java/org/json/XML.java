@@ -925,10 +925,7 @@ public class XML {
     }
 
 
-    //-----------------------------------Milestone 2
-
-
-    /* return a subsection of XML using the path, main function for M2 part 1*/
+    /* return a subsection of XML using the path*/
     public static String getXMLAtPath(XMLTokener x, List<String> pathTokens) {
         Object token;
         int indPathTokens = 0;
@@ -958,7 +955,7 @@ public class XML {
     }
 
 
-    /* returns a string representation of an XML tag, helper function for M2 part 1 */
+    /* returns a string representation of an XML tag */
     private static String parseAtPath(XMLTokener x, String tagName) {
         char currentChar;
         StringBuilder xmlBuilder = new StringBuilder();
@@ -979,7 +976,6 @@ public class XML {
 
 
     /**
-     * Milestone 2 part 1
      * Converts a specified subsection of XML into JSON using the key path
      * @param reader the reader for our XML input
      * @param path the path to the subsection to be extracted and converted
@@ -1002,7 +998,6 @@ public class XML {
 
 
     /**
-     * Milestone 2 part 2
      * Converts XML to JSON replacing a sub-section of the JSON with a specified replacement
      * @param reader the reader for our XML input
      * @param path the path to the object to replace
@@ -1029,7 +1024,7 @@ public class XML {
         return jo;
     }
 
-    /* recursive replace function based on parse(), main function used for Milestone2*/
+    /* recursive replace function based on parse()*/
     private static boolean parseAndReplace(XMLTokener x, JSONObject context, String name, List<String> pathTokens, JSONObject replacement, XMLParserConfiguration config, int pathsMatched) {
         char c;
         int i;
@@ -1286,7 +1281,6 @@ public class XML {
     }
 
 
-    //----------------------------------- Milestone 3
     public static JSONObject toJSONObject(Reader reader, Function<String, String> keyTransformer) {
         JSONObject jo = new JSONObject();
         XMLTokener x = new XMLTokener(reader);
@@ -1548,13 +1542,10 @@ public class XML {
     } // END METHOD
 
 
-    //----------------------------------- Milestone 5
 
     /**
-     * Milestone 5
      * Asynchronous method that returns a future JSONObject and performs a specified
      * operation on that object before returning to the caller
-     * @Source: Modern Java in Action: Listing 16.6, pg 394
      */
     public static Future<JSONObject> toJSONObjectAsync(Reader reader, Function<JSONObject, JSONObject> operation) {
         CompletableFuture<JSONObject> futureJson = new CompletableFuture<>();
