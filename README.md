@@ -1,44 +1,16 @@
-# Milestone 4
-Project milestone 4 assignment for 262P programming styles. The work for this assignment was completed by both **Trent Lilley** and **Joseph Lee**.
+# Modifications and Enhancements
+Authored by both **Trent Lilley** and **Joseph Lee**.
 
-## Specifications
-- the toStream method in JSONObject streams key value pairs. The keys are of type String and correspond to JSON keys. The values types are diverse and can be of type JSONObject, JSONArray, or String. 
-- Nodes of all levels, including the root node and leaf nodes, are included in the stream. Non-leaf nodes will have the their entire child tree structure either of type JSONObject or JSONArray set as their values. All leaf nodes have values of type String, a characteristic that can be used to isolate these nodes.
-- JSONArray nodes are formatted as follows: array elements have a string representation of their index set as the key while the element itself is set as the value.
+- Allow asynchronous XML to JSON conversion, useful when processing GB-scale files
 
-## For the Graders
-- The implementation is appended to the bottom of JSONObject.java. It uses a recursive style to break down and iterate through the class' map field  that is constructed upon the initialization of a JSONObject instance. It uses a Stream Builder to construct a stream of map entries.
-- The test cases are appended to the botton of JSONObjectTest.java
+- Traverse a JSON tree strucure to retrieve key-value pairs
 
-<hr />
+- Apply a transformation to all keys in the structure
 
-# Milestone 3
+- Replace a JSON sub-object with another JSON sub-object
 
-Project milestone 3 assignment for 262P programming styles. This work for this assignment was done by both **Trent Lilley** and **Joseph Lee**.
+- Extract a JSON sub-object by providing a path
 
-## Simplifying Assumptions
-- As of now the additional functions do not support JSON arrays.
-
-## For the Graders
-- A custom parse function derived from the original was used. The important changes to the original can be found in XML.java in lines 1489-1496 and lines 1524-1532.
-- The tag name extracted from the XML is converted by the key transformer just before it is sent to the accumulator be transformed into JSON.
-- 4 test cases were appended to the bottom of XMLTest.java
-
-<hr />
-
-# Milestone 2
-
-Project milestone 2 assignment for 262P programming styles. This work for this assignment was done by both **Trent Lilley** and **Joseph Lee**.
-
-## Simplifying Assumptions
-
-- As of now the additional functions do not support JSON arrays and assumes keypaths are unique to a single key.
-
-## Notes For the Grader
-
-- All additional code was appended to the bottom of XML.java. All tests were appended to the bottom of XMLTest.java.
-- The first method searches for and extracts the sub-object as XML and then runs this through the library's original XML parser.
-- The second method uses an almost identical, slightly modified version of the library's XML parser. The crucial changes are denoted by comments prefixed with REPLACE:
 
 <hr/>
 
