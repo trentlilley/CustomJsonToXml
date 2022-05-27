@@ -2716,7 +2716,7 @@ public class JSONObject {
     }
 
 
-    //................. Milestone 4
+
     /**
      * Used to construct a stream of key value pairs from the
      * map containing this JSONObject's properties
